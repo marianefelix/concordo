@@ -1,0 +1,4 @@
+create-user isaacfranco@imd.ufrn.br senhalegal Isaac Franco Fernandes
+create-user mariane@imd.ufrn.br senhalegal Mariane
+login mariane@imd.ufrn.br senhalegal
+quit
