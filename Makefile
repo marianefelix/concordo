@@ -3,7 +3,10 @@
 user.o: user.cpp user.h
 	g++ user.cpp -c
 
-system.o: system.cpp system.h user.o
+server.o: server.cpp server.h
+	g++ server.cpp -c
+
+system.o: system.cpp system.h user.o server.o
 	g++ system.cpp -c
 
 executor.o: executor.cpp executor.h system.o
@@ -12,7 +15,7 @@ executor.o: executor.cpp executor.h system.o
 objects: system.o executor.o user.o
 
 concordo: objects concordo.cpp
-	g++ -Wall system.o executor.o user.o concordo.cpp -o concordo
+	g++ -Wall -fsanitize=address system.o executor.o user.o server.o concordo.cpp -o concordo
 
 clean:
 	rm *.o concordo

@@ -1,26 +1,36 @@
 #include <iostream>
 #include "user.h"
 
+size_t User::getId() {
+  return this->id;
+}
+
+void User::setId(size_t id) {
+  this->id = id;
+}
+
 std::string User::getEmail() {
   return this->email;
+}
+
+void User::setEmail(std::string email) {
+  this->email = email;
+}
+
+void User::setName(std::string name) {
+  this->name = name;
 }
 
 std::string User::getPassword() {
   return this->password;
 }
 
-size_t User::getId() {
-  return this->id;
-}
-
-
-//construtor
-User::User(size_t id, std::string name, std::string email, std::string password) {
-  this->id = id;
-  this->name = name;
-  this->email = email;
+void User::setPassword(std::string password) {
   this->password = password;
 }
+
+//construtor
+User::User() {}
 
 //destrutor
 User::~User() {} 

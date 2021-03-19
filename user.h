@@ -10,11 +10,19 @@ class User {
     std::string password;
 
   public:
-    std::string getEmail();
-    std::string getPassword();
     size_t getId();
+    void setId(size_t id);
 
-    User(size_t id, std::string name, std::string email, std::string password); //construtor
+    std::string getName();
+    void setName(std::string name);
+
+    std::string getEmail();
+    void setEmail(std::string email);
+
+    std::string getPassword();
+    void setPassword(std::string password);
+
+    User(); //construtor
     ~User(); //destrutor
 };
 

@@ -15,6 +15,7 @@ class Executor {
 
   public:
     Executor(System &system); //construtor
+    ~Executor(); //destrutor
     void start(std::istream &in, std::ostream &out);
     std::string line_process(std::string linha);
 };

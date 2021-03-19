@@ -1,17 +1,16 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
-#include <vector>
 #include <iostream>
+#include <vector>
 #include "user.h"
-//#include <string>
-
+#include "server.h"
 
 //representa o sistema que concentra todas as operações do Concordo
 class System {
   private:
-    //precisa guardar uma coleção de servidores;
     std::vector<User> users; //vetor que contém todos os usuários do sistema
+    std::vector<Server> servers; //vetor que contém todos os servidores do sistema
     int loggedUserId = 0; //se 0: não logado, caso contrário guarda o id do usuário logado
     std::string serverNameConnected;
     std::string channelNameConneted;
@@ -35,6 +34,8 @@ class System {
     std::string leave_channel();
     std::string send_message(const std::string message);
     std::string list_messages();
+    System();
+    ~System();
 };
 
 #endif

@@ -1,4 +1,10 @@
 create-user isaacfranco@imd.ufrn.br senhalegal Isaac Franco Fernandes
 create-user mariane@imd.ufrn.br senhalegal Mariane
+create-user mariane@imd.ufrn.br senhalegal Mariane
 login mariane@imd.ufrn.br senhalegal
+create-server minha-casa
+set-server-desc minha-casa "top"
+list-servers
+remove-server minha-casa
+list-servers
 quit

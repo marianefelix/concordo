@@ -1,8 +1,11 @@
 #include "system.h"
-
-#include <sstream>
 #include <algorithm>
 
+
+//função de apoio que retorna se duas strings são iguais
+bool isEqual(std::string firstString, std::string secondString) {
+  return firstString.compare(secondString) == 0;
+}
 
 /* comandos do sistema */
 
@@ -11,81 +14,219 @@ std::string System::quit() {
 }
 
 std::string System::create_user(const std::string email, const std::string password, const std::string name) {
-  size_t usersSize = users.size();
-  bool isEmailAlredyUsed = false;
+  std::vector<User>::iterator user_it;
+  bool userAlredyExists = false;
 
-  if (usersSize != 0) {
-    for(size_t i= 0; i < usersSize; i++) {
-      std::string otherEmail = users[i].getEmail();
-      if (email.compare(otherEmail) == 0) {
-        isEmailAlredyUsed = true;
-        break;
-      }
-    }
-  }
+  //procura usuário por email
+  user_it = std::find_if(users.begin(), users.end(), [email](User user){
+    return isEqual(email, user.getEmail());
+  });
 
-  if (!isEmailAlredyUsed) {
+  userAlredyExists = user_it != users.end();
+
+  //verifica se usuário não existe
+  if (!userAlredyExists) {
     //cria novo usuário
-    User* user = new User(usersSize + 1, name, email, password);
+    User user;
+    user.setId(users.size() + 1);
+    user.setName(name);
+    user.setEmail(email);
+    user.setPassword(password);
+
     //adiciona user no vetor de usuários
-    users.push_back(*user);
+    users.push_back(user);
 
     return "Usuário criado com sucesso!";
-  } else {
-    return "Usuário já existe";
   }
+
+  return "Usuário já existe";
 }
 
 std::string System::login(const std::string email, const std::string password) {
-  size_t usersSize = users.size();
-  std::string otherEmail, otherPassword;
-  bool isUserLogged = false;
+  if (!users.empty()) {
+    std::vector<User>::iterator user_it;
+    bool areCredentialsValid = false;
 
-  if (usersSize != 0) {
-    for(size_t i= 0; i < usersSize; i++) {
-      otherEmail = users[i].getEmail();
-      otherPassword = users[i].getPassword();
+    //procura usuário pelo email e senha
+    user_it = std::find_if(users.begin(), users.end(), [email, password](User user){
+      return isEqual(email, user.getEmail()) && isEqual(password, user.getPassword());
+    });
 
-      if (email.compare(otherEmail) == 0 && password.compare(otherPassword) == 0) {
-        isUserLogged = true;
-        loggedUserId = users[i].getId();
- 
-        break;
-      }
+    areCredentialsValid = user_it != users.end();
+
+    //verifica credenciais
+    if (areCredentialsValid) {
+      loggedUserId = user_it->getId();
+      return "Logado como " + user_it->getEmail();
     }
 
-    if (isUserLogged) {
-      return "Logado como " + otherEmail;
-    } else {
-      return "Senha ou usuário inválidos!";
-    }
-  } else {
-    return "Nenhum usuário foi criado ainda.";
+    return "Senha ou usuário inválidos!";
   }
+
+  return "Nenhum usuário foi criado ainda.";
 }
 
 std::string System::disconnect() {
-  return "disconnect NÃO IMPLEMENTADO";
+  //verifica se tem algum usuário logado
+  if (loggedUserId != 0) {
+    //recupera email do usuário logado
+    std::string user = users[loggedUserId - 1].getEmail();
+
+    //modifica variável que guarda id de usuário logado
+    loggedUserId = 0;
+
+    return "Desconectando usuário " + user;
+  }
+  
+  return "Não está conectado";
 }
 
 std::string System::create_server(const std::string name) {
-  return "create_server NÃO IMPLEMENTADO";
+  if (loggedUserId != 0) {
+    std::vector<Server>::iterator server_it;
+    bool serverAlreadyExists = false;
+
+    //procura servidor pelo nome
+    server_it = std::find_if(servers.begin(), servers.end(), [name](Server server){
+      return isEqual(name, server.getName());
+    });
+
+    serverAlreadyExists = server_it != servers.end();
+
+    if (!serverAlreadyExists) {
+      //cria novo servidor
+      Server server;
+
+      server.setName(name);
+      server.setServerOwnerId(loggedUserId);
+
+      //adiciona server no vetor de servidores
+      servers.push_back(server);
+
+      std::cout << server.getDescription() << server.getInviteCode();
+      return "Servidor criado com sucesso!";
+    }
+
+    return "Já existe um servidor com esse nome";
+  }
+
+  return "Você precisa estar logado para criar um servidor";
 }
 
 std::string System::set_server_desc(const std::string name, const std::string description) {
-  return "set_server_desc NÃO IMPLEMENTADO";
+  if (loggedUserId != 0) {
+    if (!servers.empty()) {
+      std::vector<Server>::iterator server_it;    
+      bool serverExists = false;
+
+      //procura servidor por nome
+      server_it = std::find_if(servers.begin(), servers.end(), [name](Server server){
+        return isEqual(name, server.getName());
+      });
+
+      serverExists = server_it != servers.end();
+
+      //verifica se servidor não existe
+      if (!serverExists) {
+        return "Servidor ‘" + name + "’ não existe";
+      } else if(loggedUserId != server_it->getServerOwnerId()) { //verifica diferença de ids dos usuários
+        return "Você não pode alterar a descrição de um servidor que não foi criado por você";
+      } else {
+        //seta descrição do servidor
+        server_it->setDescription(description);
+        return "Descrição do servidor ‘" + name + "’ modificada!";
+      }
+    }
+
+    return "Nenhum servidor foi criado ainda";
+  }
+
+  return "Você precisa estar logado para alterar a descrição do servidor";
 }
 
 std::string System::set_server_invite_code(const std::string name, const std::string code) {
-  return "set_server_invite_code NÃO IMPLEMENTADO";
+  if (loggedUserId != 0) {  
+    if (!servers.empty()) {
+      std::vector<Server>::iterator server_it;    
+      bool serverExists = false;
+
+      //procura servidor por nome
+      server_it = std::find_if(servers.begin(), servers.end(), [name](Server server){
+        return isEqual(name, server.getName());
+      });
+
+      serverExists = server_it != servers.end();
+
+      //verifica se servidor não existe
+      if (!serverExists) {
+        return "Servidor ‘" + name + "’ não existe";
+      } else if(loggedUserId != server_it->getServerOwnerId()) { //verifica diferença de ids dos usuários
+        return "Você não pode alterar o código de convite de um servidor que não foi criado por você";
+      } else {
+        //verifica se code não é vazio
+        if (code != "") {
+          //seta código de convite do servidor
+          server_it->setInviteCode(code);
+          return "Código de convite do servidor ‘" + name + "’ modificado!";
+        } else {
+          server_it->setInviteCode("");
+          return "Código de convite do servidor ‘" + name + "’ removido!";
+        }
+      }
+    }
+
+    return "Nenhum servidor foi criado ainda";
+  }
+
+  return "Você precisa estar logado para alterar o código de convite do servidor";
 }
 
 std::string System::list_servers() {
-  return "list_servers NÃO IMPLEMENTADO";
+  //percorre vetor de servidores
+  for (size_t i = 0; i < servers.size(); i++) {
+    std::string serverIs = "fechado";
+    if (servers[i].getInviteCode() == "") {
+      serverIs = "aberto";
+    }
+
+    if (i != servers.size() - 1) {
+      std::cout << servers[i].getName() + " " + servers[i].getDescription() + " " + serverIs << std::endl;
+    } else {
+      std::cout << servers[i].getName() + " " + servers[i].getDescription() + " " + serverIs;
+    }
+  }
+
+  return "Nenhum servidor criado";
 }
 
 std::string System::remove_server(const std::string name) {
-  return "remove_server NÃO IMPLEMENTADO";
+  if (loggedUserId != 0) {
+    if (!servers.empty()) {
+      std::vector<Server>::iterator server_it;    
+      bool serverExists = false;
+
+      //procura servidor por nome
+      server_it = std::find_if(servers.begin(), servers.end(), [name](Server server){
+        return isEqual(name, server.getName());
+      });
+
+      serverExists = server_it != servers.end();
+
+      if (!serverExists) {
+        return "Servidor ‘" + name + "’ não existe";
+      } else if(loggedUserId != server_it->getServerOwnerId()) {
+        return "Você não é o dono do servidor ‘" + name + "’";
+      } else {
+        //deleta servidor do vetor
+        servers.erase(server_it);
+        return "Servidor ‘" + name + "’ removido";
+      }
+    }
+
+    return "Nenhum servidor foi criado ainda";
+  }
+
+  return "Você precisa estar logado para alterar o código de convite do servidor";
 }
 
 std::string System::enter_server(const std::string name, const std::string code) {
@@ -124,4 +265,8 @@ std::string System::list_messages() {
   return "list_messages NÃO IMPLEMENTADO";
 }
 
-/* IMPLEMENTAR MÉTODOS PARA OS COMANDOS RESTANTES */
+//construtor
+System::System() {}
+
+//destrutor
+System::~System() {}

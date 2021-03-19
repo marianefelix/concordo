@@ -1,6 +1,7 @@
 #include "executor.h"
 
 #include <istream>
+#include <algorithm>
 #include <ostream>
 #include <iostream>
 #include <sstream>
@@ -10,7 +11,7 @@
   função de apoio que recebe um istringstream e
   lê todo texto restante até o fim da linha
 */
-std::string rest_of(std::istringstream &ss) {
+std::string restOf(std::istringstream &ss) {
   std::string rest;
 
   //lê o resto da linha
@@ -23,6 +24,19 @@ std::string rest_of(std::istringstream &ss) {
   }
 
   return rest;
+}
+
+//funcao de apoio para remover aspas de uma string
+std::string removeQuotes(std::string string) {
+  //verifica se string recebida tem aspas e as remove
+  if (string.at(0) == '\"' || string.at(string.length() - 1) == '\"') {
+    string.erase(
+      std::remove(string.begin(), string.end(), '\"' ),
+      string.end()
+    );
+  }
+
+  return string;
 }
 
 // Inicia o processamento dos comentos.
@@ -62,7 +76,7 @@ std::string Executor::line_process(std::string line) {
     
     buf >> email;
     buf >> password;
-    name = rest_of(buf);
+    name = restOf(buf);
 
     return system->create_user(email, password, name);
   }
@@ -90,7 +104,7 @@ std::string Executor::line_process(std::string line) {
   else if (commandName == "set-server-desc") {
     std::string name, description;
     buf >> name;
-    description = rest_of(buf);
+    description = removeQuotes(restOf(buf));
 
     return system->set_server_desc(name, description);
   }
@@ -158,7 +172,7 @@ std::string Executor::line_process(std::string line) {
   
   else if (commandName == "send-message") {
     std::string message;
-    message = rest_of(buf);
+    message = restOf(buf);
 
     return system->send_message(message);
   }
@@ -181,5 +195,7 @@ Executor::Executor(System &system) {
   this->logout = false;
   this->system = &system;
 }
+
+Executor::~Executor() {}
 
 
