@@ -17,7 +17,7 @@ Execute os seguintes comandos no seu terminal:
 $ git clone https://github.com/marianefelix/concordo.git
 #compile o projeto
 $ make
-#você pode executar o projeto e digitar os comandos seguindos de enter
+#você pode executar o projeto e digitar os comandos seguidos de enter
 $ ./concordo
 #ou pode criar um arquivo .txt com uma lista de comandos, um por linha, e redirecionar esse arquivo como entrada padrão
 $ ./concordo < script_comandos.txt
