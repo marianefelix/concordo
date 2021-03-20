@@ -1,4 +1,4 @@
-<h1 align="center">Concordo</h1>
+<h1 align="center">music_player</h1>
 
 <p align="center">
   <a href="#sobre">Sobre</a>

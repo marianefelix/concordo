@@ -6,7 +6,7 @@
 #include <ostream>
 #include <sstream>
 
-//classe que representa o executor do sistema
+//representa o executor do sistema
 class Executor {
   private:
     System* system; //ponteiro para sistema

@@ -1,28 +1,32 @@
 .DEFAULT_GOAL := all
 
-user.o: user.cpp user.h
-	g++ user.cpp -c
+objects/user.o: src/user.cpp headers/user.h
+		g++ src/user.cpp -Iheaders -Wall -ansi -pedantic -std=c++11 -g -c -o objects/user.o
 
-server.o: server.cpp server.h
-	g++ server.cpp -c
+objects/server.o: src/server.cpp headers/server.h
+		g++ src/server.cpp -Iheaders -Wall -ansi -pedantic -std=c++11 -g -c -o objects/server.o
 
-system.o: system.cpp system.h user.o server.o
-	g++ system.cpp -c
+objects/system.o: src/system.cpp headers/system.h objects/user.o objects/server.o
+		g++ src/system.cpp -Iheaders -Wall -ansi -pedantic -std=c++11 -g -c -o objects/system.o
 
-executor.o: executor.cpp executor.h system.o
-	g++ executor.cpp -c
+objects/executor.o: src/executor.cpp headers/executor.h objects/system.o
+		g++ src/executor.cpp -Iheaders -Wall -ansi -pedantic -std=c++11 -g -c -o objects/executor.o
 
-objects: system.o executor.o user.o
+objects/concordo.o: src/concordo.cpp objects/system.o objects/executor.o objects/user.o objects/server.o
+		g++ src/concordo.cpp -Iheaders -Wall -ansi -pedantic -std=c++11 -g -c -o objects/concordo.o
 
-concordo: objects concordo.cpp
-	g++ -Wall -fsanitize=address system.o executor.o user.o server.o concordo.cpp -o concordo
+concordo: objects/concordo.o objects/system.o objects/executor.o objects/user.o objects/server.o
+		g++ objects/*.o -Iheaders -Wall -ansi -pedantic -std=c++11 -g -o concordo
 
-clean:
-	rm *.o concordo
+#cria a pasta objects
+create_objects:
+		mkdir -p objects
 
-all: concordo
+all: create_objects concordo
 
 run:
-	./concordo
+		./concordo
 
-#-fsanitize=address
+#remove a pasta objects e o executável do projeto
+clean:
+		rm -rf objects concordo

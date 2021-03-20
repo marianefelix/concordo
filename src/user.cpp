@@ -16,6 +16,9 @@ std::string User::getEmail() {
 void User::setEmail(std::string email) {
   this->email = email;
 }
+std::string User::getName() {
+  return this->name;
+}
 
 void User::setName(std::string name) {
   this->name = name;

@@ -1,7 +1,7 @@
 #ifndef USER_H
 #define USER_H
 
-//classe que representa um usuário
+//representa um usuário
 class User {
   private:
     size_t id;

@@ -42,6 +42,16 @@ void Server::setInviteCode(const std::string code) {
   this->inviteCode = code;
 }
 
+//rever
+std::vector<size_t> Server::getPartipants() {
+  return this->participantsIds;
+}
+
+//adiciona id de participante do servidor
+void Server::pushParticipantId(size_t id) {
+  participantsIds.push_back(id);
+}
+
 //construtor
 Server::Server() {
   this->description = "";

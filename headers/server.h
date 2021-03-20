@@ -1,15 +1,14 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-//classe que representa um servidor
+//representa um servidor
 class Server {
   private:
     size_t serverOwnerId; //id do dono do servidor (quem criou)
     std::string name; //nome do servidor
     std::string description; //descrição do servidor
     std::string inviteCode; //código para entrar no servidor
-    std::vector<int> participantsIds; //vetor de IDs de usuários que estão no servidor
-    //std::vector<Channel> channels;
+    std::vector<size_t> participantsIds; //vetor de IDs de usuários que estão no servidor
 
   public:
     std::string getName();
@@ -23,6 +22,9 @@ class Server {
 
     std::string getInviteCode();
     void setInviteCode(const std::string code);
+
+    std::vector<size_t> getPartipants();
+    void pushParticipantId(size_t id);
 
     Server(); //construtor
     ~Server(); //destrutor
