@@ -4,10 +4,10 @@
 //representa um usuário
 class User {
   private:
-    size_t id;
-    std::string name;
-    std::string email;
-    std::string password;
+    size_t id; //id do usuário
+    std::string name; //nome do usuário
+    std::string email; //email do usuário
+    std::string password; //senha do usuário
 
   public:
     size_t getId();

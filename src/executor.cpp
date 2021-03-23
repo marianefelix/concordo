@@ -39,10 +39,7 @@ std::string removeQuotes(std::string string) {
   return string;
 }
 
-// Inicia o processamento dos comentos.
-// Esse método recebe por exemplo o "cin" e o "cout" no main
-// Dessa forma ele faz o necessário para ler 1 comando por linha e
-// o processar corretamente, colocando no stream de saída o resultado de cada um.
+//processa entradas e saídas
 void Executor::start(std::istream &inputStream, std::ostream &outputStream) {
   std::string line, output;
   this->logout = false;
@@ -55,8 +52,10 @@ void Executor::start(std::istream &inputStream, std::ostream &outputStream) {
   }
 }
 
-// Método responsável por processar cada linha, capturando o nome do comando
-// e seus parâmetros em variáveis e executar o método correspondente no sistema
+/*
+  processa cada linha de comando e executa o método 
+  correspondente, caso o comando seja válido
+*/
 std::string Executor::line_process(std::string line) {
   std::istringstream buf(line);
   std::string commandName;
@@ -104,9 +103,11 @@ std::string Executor::line_process(std::string line) {
   else if (commandName == "set-server-desc") {
     std::string name, description;
     buf >> name;
-    description = removeQuotes(restOf(buf));
+    description = restOf(buf);
 
-    return system->set_server_desc(name, description);
+    std::string newDescription = (description != "") ? removeQuotes(description) : description;
+
+    return system->set_server_desc(name, newDescription);
   }
 
   else if (commandName == "set-server-invite-code") {
@@ -187,8 +188,9 @@ std::string Executor::line_process(std::string line) {
 }
 
 /* 
-  construtor: recebe uma referência do sistema que vai operar
-  e guarda o seu endereço para executar as operações
+  construtor que recebe uma referência do sistema
+  que vai operar e guarda o seu endereço para 
+  executar as operações
 */
 Executor::Executor(System &system) {
   //inicializa logout 
@@ -196,6 +198,7 @@ Executor::Executor(System &system) {
   this->system = &system;
 }
 
+//destrutor
 Executor::~Executor() {}
 
 

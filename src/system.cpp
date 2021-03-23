@@ -9,11 +9,17 @@ bool isEqual(std::string firstString, std::string secondString) {
 
 /* comandos do sistema */
 
+//sai do sistema
 std::string System::quit() {
   return "Saindo do Concordo...";
 }
 
+//cria usuário
 std::string System::create_user(const std::string email, const std::string password, const std::string name) {
+  if (email == "" || name == "") {
+    return "Email e nome de usuário não podem ser vazios";
+  }
+
   std::vector<User>::iterator user_it;
   bool userAlredyExists = false;
 
@@ -42,6 +48,7 @@ std::string System::create_user(const std::string email, const std::string passw
   return "Usuário já existe";
 }
 
+//realiza login de usuário
 std::string System::login(const std::string email, const std::string password) {
   if (!users.empty()) {
     std::vector<User>::iterator user_it;
@@ -56,6 +63,14 @@ std::string System::login(const std::string email, const std::string password) {
 
     //verifica credenciais
     if (areCredentialsValid) {
+      /*
+        verifica se usuário que está efetuando login no
+        sistema é diferente do usuário que estava logado
+        anterioriormente
+      */
+      if (user_it->getId() !=  loggedUserId) {
+        serverNameConnected = "";
+      }
       loggedUserId = user_it->getId();
       return "Logado como " + user_it->getEmail();
     }
@@ -66,6 +81,7 @@ std::string System::login(const std::string email, const std::string password) {
   return "Nenhum usuário foi criado ainda.";
 }
 
+//realiza logout de usuário
 std::string System::disconnect() {
   //verifica se tem algum usuário logado
   if (loggedUserId != 0) {
@@ -87,8 +103,14 @@ std::string System::disconnect() {
   return "Não está conectado";
 }
 
+//cria servidor
 std::string System::create_server(const std::string name) {
   if (loggedUserId != 0) {
+
+    if (name == "") {
+      return "O nome do servidor não pode ser vazio";
+    }
+
     std::vector<Server>::iterator server_it;
     bool serverAlreadyExists = false;
 
@@ -110,7 +132,6 @@ std::string System::create_server(const std::string name) {
       //adiciona server no vetor de servidores
       servers.push_back(server);
 
-      std::cout << server.getDescription() << server.getInviteCode();
       return "Servidor criado com sucesso!";
     }
 
@@ -120,6 +141,7 @@ std::string System::create_server(const std::string name) {
   return "Você precisa estar logado para criar um servidor";
 }
 
+//altera descrição de servidor
 std::string System::set_server_desc(const std::string name, const std::string description) {
   if (loggedUserId != 0) {
     if (!servers.empty()) {
@@ -151,6 +173,7 @@ std::string System::set_server_desc(const std::string name, const std::string de
   return "Você precisa estar logado para alterar a descrição do servidor";
 }
 
+//altera código de convite de servidor
 std::string System::set_server_invite_code(const std::string name, const std::string code) {
   if (loggedUserId != 0) {
     if (!servers.empty()) {
@@ -188,6 +211,7 @@ std::string System::set_server_invite_code(const std::string name, const std::st
   return "Você precisa estar logado para alterar o código de convite do servidor";
 }
 
+//lista servidores cadastrados no sistema
 std::string System::list_servers() {
   if (loggedUserId != 0) {
     if (!servers.empty()) {
@@ -198,7 +222,10 @@ std::string System::list_servers() {
           serverIs = "aberto";
         }
 
-        std::cout << servers[i].getName() + " " + servers[i].getDescription() + " " + serverIs;
+        std::string description = (servers[i].getDescription() == "") ? "sem descrição" : servers[i].getDescription();
+        
+        std::cout << servers[i].getName() + ": " + description + " - " + serverIs;
+
         if (i != servers.size() - 1) {
           std::cout << std::endl;
         }
@@ -213,6 +240,7 @@ std::string System::list_servers() {
   return "Você precisa estar logado para ver servidores";
 }
 
+//remove servidor do sistema
 std::string System::remove_server(const std::string name) {
   if (loggedUserId != 0) {
     if (!servers.empty()) {
@@ -241,9 +269,10 @@ std::string System::remove_server(const std::string name) {
     return "Nenhum servidor foi criado ainda";
   }
 
-  return "Você precisa estar logado para alterar o código de convite do servidor";
+  return "Você precisa estar logado para remover um servidor";
 }
 
+//entra em um servidor
 std::string System::enter_server(const std::string name, const std::string code) {
   if (loggedUserId != 0) {
     if (!servers.empty()) {
@@ -297,6 +326,7 @@ std::string System::enter_server(const std::string name, const std::string code)
   return "Você precisa estar logado para entrar em um servidor";
 }
 
+//desconecta do servidor
 std::string System::leave_server() {
   if (loggedUserId != 0) {
     if (serverNameConnected != "") {
@@ -306,11 +336,12 @@ std::string System::leave_server() {
       return "Saindo do servidor ‘" + tempName + "’";
     }
 
-    return "Você não está conectado a nenhum servidor";
+    return "Você não está visualizando nenhum servidor";
   }
   return "Você precisa estar logado para sair de um servidor";
 }
 
+//lista participantes do servidor que está sendo visualizado
 std::string System::list_participants() {
   if (loggedUserId != 0) {
     if (serverNameConnected != "") {

@@ -11,7 +11,7 @@ class System {
   private:
     std::vector<User> users; //vetor que contém todos os usuários do sistema
     std::vector<Server> servers; //vetor que contém todos os servidores do sistema
-    size_t loggedUserId = 0; //se 0: não logado, caso contrário guarda o id do usuário logado
+    size_t loggedUserId = 0; //guarda o id do usuário logado
     std::string serverNameConnected; //guarda nome do servidor que está sendo visualizado
 
   public:
