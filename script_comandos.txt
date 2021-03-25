@@ -1,7 +1,13 @@
 create-user mariane@imd.ufrn.br senhalegal Mariane
-create-user julia@imd.ufrn.br senhalegal Julia
 login mariane@imd.ufrn.br senhalegal
 create-server minha-casa
-create-server sei-la
 set-server-desc minha-casa "top"
+set-server-invite-code minha-casa 321
+list-servers
+enter-server minha-casa
+list-participants
+leave-server
+remove-server minha-casa
+list-servers
+disconnect
 quit
