@@ -135,6 +135,8 @@ std::string System::create_server(const std::string name) {
 
       //adiciona server no vetor de servidores
       servers.push_back(server);
+      //adiciona dono do servidor na lista de participantes
+      server.pushParticipantId(loggedUserId);
 
       return "Servidor criado com sucesso!";
     }
@@ -196,7 +198,7 @@ std::string System::set_server_invite_code(const std::string name, const std::st
       //verifica existência de servidor
       if (!serverExists) {
         return "Servidor ‘" + name + "’ não existe";
-      } else if(loggedUserId != server_it->getServerOwnerId()) { //verifica diferença de ids dos usuários
+      } else if (loggedUserId != server_it->getServerOwnerId()) { //verifica diferença de ids dos usuários
         return "Você não pode alterar o código de convite de um servidor que não foi criado por você";
       } else {
         //verifica se code não é vazio
