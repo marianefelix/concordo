@@ -22,7 +22,7 @@ $ git clone https://github.com/marianefelix/concordo.git
 $ make
 #você pode executar o projeto e digitar os comandos seguidos de enter
 $ ./concordo
-#ou pode criar um arquivo .txt com uma lista de comandos, um por linha, e redirecionar esse arquivo como entrada padrão
+#ou pode alterar o arquivo script_comandos.txt com uma lista de comandos, um por linha, e redirecionar esse arquivo como entrada padrão
 $ ./concordo < script_comandos.txt
 #para limpar tudo
 $ make clean
