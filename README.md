@@ -16,8 +16,6 @@ O Concordo é um clone do discord desenvolvido em C++ para a disciplina de Lingu
 Execute os seguintes comandos no seu terminal:
 
 ```bash
-#clone o projeto
-$ git clone https://github.com/marianefelix/concordo.git
 #compile o projeto
 $ make
 #você pode executar o projeto e digitar os comandos seguidos de enter
@@ -119,8 +117,8 @@ Código de convite do servidor ‘kpop’ removido!
 ### Listar servidores (*list-servers*)
 Lista servidores registrados no sistema, mostrando seus nomes, descrição (caso exista) e se é aberto ou fechado.
 
- #### Exemplo
- ```bash
+#### Exemplo
+```bash
 #comando para listar servidores
 $ list-servers
 #saída
@@ -176,9 +174,9 @@ Servidor ‘kpop’ removido
 ### Sair do sistema (*quit*)
 Encerra a aplicação. 
 
- #### Exemplo
- ```bash
- #comando para encerrar/sair do programa
+#### Exemplo
+```bash
+#comando para encerrar/sair do programa
 $ quit
 #saída
 Saindo do Concordo...
